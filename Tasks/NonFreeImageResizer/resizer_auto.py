@@ -44,9 +44,9 @@ noReduceRe = r"\{\{Non-free no reduce\}\}"  # Currently no redirects, but we do 
 
 suffixStr = " ([[WP:BOT|BOT]] - [[User:DatBot/NonFreeImageResizer/Run|disable]])"
 
-site = mwclient.Site("en.wikipedia.org")
-ErrorPage = site.pages["User:DatBot/errors/imageresizer"]
-RunPage = site.pages["User:DatBot/NonFreeImageResizer/Run"]
+site = mwclient.Site("pt.wikipedia.org")
+ErrorPage = site.pages["User:GoeBOThe/erros/imageresizer"]
+RunPage = site.pages["User:GoeBOThe/NonFreeImageResizer/Run"]
 
 
 def deleteFile(fileName: typing.Union[str, pathlib.Path]) -> None:
