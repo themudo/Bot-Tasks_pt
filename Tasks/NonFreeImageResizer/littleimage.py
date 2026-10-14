@@ -34,10 +34,10 @@ def generateThumbnails(frames: ImageSequence.Iterator, size: tuple[int, int]):
 
 
 def calculateNewSize(origWidth: int, origHeight: int):
-    newWidth = math.sqrt((100000.0 * origWidth) / origHeight)
-    widthPercent = newWidth / origWidth
-    newHeight = origHeight * widthPercent
-
+    newHeight = 500
+    heightPercent = newHeight / origHeight
+    newWidth = origWidth * heightPercent
+    
     originalPixels = origWidth * origHeight
     modifiedPixels = newWidth * newHeight
     percentChange = 100.0 * (abs(modifiedPixels - originalPixels) / float(modifiedPixels))
@@ -123,8 +123,8 @@ def downloadImage(randomName: str, imagePage: mwclient.image.Image) -> Union[pat
             docElement: xml.dom.minidom.Element = defusedxml.minidom.parse(str(tempFile)).documentElement
 
             newWidth, newHeight, percentChange = calculateNewSize(oldWidth, oldHeight)
-            if percentChange < 5:
-                print(f"Looks like we'd have less than 5% change in pixel counts ({percentChange}). Skipping.")
+            if oldHeight < 500:
+                print(f"Parece que a imagem já tinha menos do que 500px de altura. Passando à frente.")
                 tempFile.unlink()
                 return "PIXEL"
 
@@ -182,9 +182,9 @@ def downloadImage(randomName: str, imagePage: mwclient.image.Image) -> Union[pat
                 return "UPSCALE"
 
             newWidth, newHeight, percentChange = calculateNewSize(oldWidth, oldHeight)
-            if percentChange < 5:
+            if oldWidth < 500 :
                 img.close()
-                print("Looks like we'd have a less than 5% change in pixel counts. Skipping.")
+                print("Parece que a imagem já tinha menos do que 500px de largura. Passando à frente.")
                 tempFile.unlink()
                 return "PIXEL"
 
@@ -216,11 +216,11 @@ def downloadImage(randomName: str, imagePage: mwclient.image.Image) -> Union[pat
     #     return "ERROR"
     except Exception as e:
         errorText = "{}.{}: {}".format(type(e).__module__, type(e).__qualname__, e)
-        print("Unable to resize image {0} - aborting ({1})".format(imagePage.page_title, errorText))
+        print("Não é possível redimensionar a imagem {0} - a abortar ({1})".format(imagePage.page_title, errorText))
         tempFile.unlink()
         return "ERROR", errorText
 
-    print(f"Image saved to disk at {randomName}{extension}")
+    print(f"Imagem guardada no disco em {randomName}{extension}")
     if img is not None:
         img.close()
         updateMetadata(tempFile, fullName)  # pyexiv2, see top
